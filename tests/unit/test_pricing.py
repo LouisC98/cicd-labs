@@ -44,9 +44,21 @@ def test_quote_panier_vide():
     ("FIXED5", Decimal("30.00"), Decimal("5.00")),
     ("", Decimal("30.00"), Decimal("0.00")),
     ("welcome10", Decimal("20.00"), Decimal("2.00")),
+    ("STUDENT15", Decimal("10.00"), Decimal("1.50")),
 ])
 def test_coupon_discount(coupon, subtotal, attendu):
     assert coupon_discount(subtotal, coupon) == attendu
+
+def test_student15_non_cumulable_remise_volume():
+    q = quote([
+        {"product_id": "sticker", "qty": 10},
+        {"product_id": "mug", "qty": 2},
+    ], "STUDENT15")
+    assert q.discount == Decimal("3.75")
+
+def test_student15_rien_si_tout_en_remise_volume():
+    q = quote([{"product_id": "mug", "qty": 10}], "STUDENT15")
+    assert q.discount == Decimal("0.00")
 
 def test_coupon_inconnu():
     with pytest.raises(ValueError):

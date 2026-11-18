@@ -115,12 +115,15 @@ def quote(items: list[dict], coupon: str | None = None) -> Quote:
         product = get_product(item["product_id"])  # KeyError si inconnu
         total = line_total(product.price, item["qty"])
         q.lines.append(Line(product.id, item["qty"], product.price, total))
-    q.subtotal = money(sum((ln.total for ln in q.lines), Decimal("0")))
+    q.subtotal = sum_lines(q.lines)
     base = q.subtotal
     if q.coupon == "STUDENT15":
-        base = money(sum((ln.total for ln in q.lines if ln.qty < BULK_QTY), Decimal("0")))
+        base = sum_lines([ln for ln in q.lines if ln.qty < BULK_QTY])
     q.discount = coupon_discount(base, coupon) if q.lines else Decimal("0.00")
     after = q.subtotal - q.discount
     q.shipping = shipping_cost(after, coupon, empty=not q.lines)
     q.total = money(after + q.shipping)
     return q
+
+def sum_lines(lines: list[Line]) -> Decimal:
+    return money(sum(ln.total for ln in lines))

@@ -35,13 +35,20 @@ Lisez `ai_tools/prompts/generate_tests.md`. Puis, dans le fichier généré :
 
 ### 4. Prompt engineering (30 min)
 Modifiez le prompt et comparez (gardez un tableau de résultats) :
+
 | Variante | Nb tests | Tests en échec | Couverture branches | Temps |
 |---|---|---|---|---|
-| Prompt fourni | | | | |
-| Sans le code source (spec seule) | | | | |
-| + exemple de test « parfait » (few-shot) | | | | |
-| Température 0.8 au lieu de 0.2 | | | | |
-| Autre modèle (`LLM_MODEL=...`) | | | | |
+| Prompt fourni (Haiku, via Claude Code) | 35 | 0 | 97 % (mutation 84 %) | non mesuré |
+| Sans le code source (spec seule) | 20 | 20 | 31 % (mutation 0 %) | non mesuré |
+| + exemple de test « parfait » (few-shot) | 35 | 0 | 97 % (mutation 89 %) | non mesuré |
+| Température 0.8 au lieu de 0.2 | — | — | — | non mesurable (1) |
+| Autre modèle (Sonnet, via `/model`) | 57 | 0 | 98 % (mutation 91 %) | non mesuré |
+| *Référence : offline (sans IA)* | *12* | *0* | *97 % (mutation 59 %)* | *—* |
+| *Référence : tests manuels Atelier 1* | *26* | *0* | *97 % (mutation 80 %)* | *—* |
+
+- Génération faite avec Claude Code (sans clé API) et non avec `generate_tests.py`.
+- (1) Claude Code ne permet pas de régler la température.
+- Score de mutation maximal atteignable : 91 % (4 mutants équivalents, l.53-56 de `pricing.py`).
 
 ### 5. Évaluer la qualité des tests générés (30 min)
 La couverture ne suffit pas : un test sans `assert` couvre du code sans rien vérifier.

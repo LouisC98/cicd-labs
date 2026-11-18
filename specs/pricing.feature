@@ -66,3 +66,21 @@ Fonctionnalité: Calcul du total d'un panier
     Étant donné un panier avec 1 "licorne"
     Quand je calcule le total
     Alors une erreur "Produit inconnu" est levée
+
+  Scénario: FIXED5 au seuil
+    Étant donné un panier avec 1 "book"
+    Quand j'applique le coupon "FIXED5"
+    Et je calcule le total
+    Alors la remise vaut 0
+
+  Scénario: Remise volume dès 10 unités et coupon WELCOME10
+    Étant donné un panier avec 10 "sticker"
+    Quand j'applique le coupon "WELCOME10"
+    Et je calcule le total
+    Alors la remise vaut 2.33
+    Et le total vaut 25.85
+
+  Scénario: Quantité zéro refusée
+    Étant donné un panier avec 0 "mug"
+    Quand je calcule le total
+    Alors une erreur "Quantité hors limites" est levée

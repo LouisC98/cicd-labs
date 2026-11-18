@@ -22,6 +22,15 @@
 - Un test généré est **relu** avant fusion (marqueur `@pytest.mark.generated`).
 - Il doit échouer si on casse la règle qu'il prétend vérifier (vérifié par mutation).
 - Pas de secret ni de donnée client dans les prompts.
+- Le prompt de génération inclut toujours le **code source** testé, pas seulement la spec :
+  sans lui, le LLM ne connaît pas l'API et produit des tests inexécutables
+  (mesuré : 20 tests sur 20 en échec avec la spec seule).
+- À la relecture, on vérifie en priorité les **seuils** : chaque limite doit être testée
+  pile dessus et juste en dessous (le LLM a tendance à choisir des valeurs trop éloignées).
+- La **personne qui génère et fusionne** un test en est responsable, comme si elle l'avait écrit :
+  l'IA est un outil, pas un auteur.
+- Le LLM **n'exécute pas** les tests qu'il génère : on veut voir sa production brute,
+  sinon il peut corriger ses erreurs en silence et masquer ses hallucinations.
 
 ## 4. Gestion des tests instables (flaky)
 - Détection : `ai_tools/test_history.py` (score ≥ 0,6).
